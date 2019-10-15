@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="box"></div>
+</body>
+<script>
+    // function deepClone(obj) {
+    //     let result = Array.isArray(obj) ? [] : {};
+    //     if (obj && typeof obj === "object") {
+    //         for (let key in obj) {
+    //             if (obj.hasOwnProperty(key)) {
+    //                 if (obj[key] && typeof obj[key] === "object") {
+    //                     result[key] = deepClone(obj[key]);
+    //                 } else {
+    //                     result[key] = obj[key];
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return result;
+    // }
+    // let a = [1, 2, 3, 4];
+    // let b = [1, {
+    //     a: 2,
+    //     b: 3
+    // }, 4];
+    // var box = document.getElementById("box");
+    // box.innerHTML = deepClone(b);
+    // console.log(deepClone(b));
+    //循环爆栈
+    // var obj1 = {
+    //     x: 1,
+    //     y: 2
+    // };
+    // obj1.z = obj1;
+    // var obj2 = deepClone(obj1);
+
+
+
+
+
+
+    function deepClone(obj, parent = null) { // 改进（1）
+        let result = Array.isArray(obj) ? [] : {};
+        let _parent = parent; // 改进（2）
+        while (_parent) { // 改进（3）
+            console.log(_parent.originalParent);
+            console.log(_parent.currentParent);
+            console.log("1:" + _parent.parent);
+            if (_parent.originalParent === obj) {
+                return _parent.currentParent;
+            }
+            _parent = _parent.parent;
+        }
+        if (obj && typeof obj === "object") {
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if (obj[key] && typeof obj[key] === "object") {
+                        result[key] = deepClone(obj[key], { // 改进（4）
+                            originalParent: obj,
+                            currentParent: result,
+                            parent: parent
+                        });
+                    } else {
+                        result[key] = obj[key];
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    // 调试用
+    var obj1 = {
+        x: 1,
+        y: 2
+    };
+    obj1.z = obj1;
+    var obj2 = deepClone(obj1);
+    console.log(obj1); //太长了去浏览器试一下吧～ 
+    console.log(obj2); //太长了去浏览器试一下吧～ 
+
+
+
+
+
+
+    // function deepClone(obj, parent = null) {
+    //     let result; // 最后的返回结果
+
+    //     let _parent = parent; // 防止循环引用
+    //     while (_parent) {
+    //         if (_parent.originalParent === obj) {
+    //             return _parent.currentParent;
+    //         }
+    //         _parent = _parent.parent;
+    //     }
+
+    //     if (obj && typeof obj === "object") { // 返回引用数据类型(null已被判断条件排除))
+    //         if (obj instanceof RegExp) { // RegExp类型
+    //             result = new RegExp(obj.source, obj.flags)
+    //         } else if (obj instanceof Date) { // Date类型
+    //             result = new Date(obj.getTime());
+    //         } else {
+    //             if (obj instanceof Array) { // Array类型
+    //                 result = []
+    //             } else { // Object类型，继承原型链
+    //                 let proto = Object.getPrototypeOf(obj);
+    //                 result = Object.create(proto);
+    //             }
+    //             for (let key in obj) { // Array类型 与 Object类型 的深拷贝
+    //                 if (obj.hasOwnProperty(key)) {
+    //                     if (obj[key] && typeof obj[key] === "object") {
+    //                         result[key] = deepClone(obj[key], {
+    //                             originalParent: obj,
+    //                             currentParent: result,
+    //                             parent: parent
+    //                         });
+    //                     } else {
+    //                         result[key] = obj[key];
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else { // 返回基本数据类型与Function类型,因为Function不需要深拷贝
+    //         return obj
+    //     }
+    //     return result;
+    // }
+
+    // // 调试用
+    // function construct() {
+    //     this.a = 1,
+    //         this.b = {
+    //             x: 2,
+    //             y: 3,
+    //             z: [4, 5, [6]]
+    //         },
+    //         this.c = [7, 8, [9, 10]],
+    //         this.d = new Date(),
+    //         this.e = /abc/ig,
+    //         this.f = function (a, b) {
+    //             return a + b
+    //         },
+    //         this.g = null,
+    //         this.h = undefined,
+    //         this.i = "hello",
+    //         this.j = Symbol("foo")
+    // }
+    // construct.prototype.str = "I'm prototype"
+    // var obj1 = new construct()
+    // obj1.k = obj1
+    // obj2 = deepClone(obj1)
+    // obj2.b.x = 999
+    // obj2.c[0] = 666
+    // console.log(obj1)
+    // console.log(obj2)
+    // console.log(obj1.str)
+    // console.log(obj2.str)
+</script>
+
+</html>

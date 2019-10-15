@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // var a = 1
+
+    // function test() {
+    //     console.log(this)
+    // }
+    // var test2 = () => {
+    //     console.log("test2:" + this.a)
+    // }
+    // var obj = {
+    //     a: 2,
+    //     test
+    // }
+    // var obj0 = {
+    //     a: 3,
+    //     obj
+    // }
+    // var obj3 = {
+    //     a: 3,
+    //     test2,
+    //     test3: () => {
+    //         console.log("test3:" + this.a)
+    //     }
+    // }
+
+    // function use(callback) {
+    //     callback;
+    // }
+
+    // function arg() {
+    //     console.log(arguments);
+    // }
+    // // 函数被调用时（ 即运行时） 才会确定该函数内this的指向。 因为在函数中this与arguments是两个特殊的变量， 
+    // // 在函数被调用时才会取得它们， 而且搜索这两个变量时只会在活动对象范围里面去搜。
+    // // 普通函数this指向调用它的对象
+    // test(); // 1 window.test() 指向全局对象window
+    // obj.test(); // 2 obj.test() 指向obj对象
+    // obj0.obj.test(); // 2 调用test()的还是obj，所以还是obj.test()
+    // var testCopy = obj.test;
+    // testCopy(); // 1 window.testCopr() 指向全局对象
+    // var cx = new test(); // 指向test，构造函数中的this与被创建的新对象绑定。
+    // // setTimeout(obj.test); // 1 相当于var xxx = obj.test; xxx(); 还是window.xxx()
+    // // setTimeout(obj.test()); // 2
+    // use(test()); // 1 相当于 test(),也就是window.test()
+    // use(obj.test()) //2 相当于obj.test()
+    // test2(); //1
+    // obj3.test2(); //1
+    // obj3.test3(); //1
+
+
+
+
+
+
+    var age = 11;
+
+    function Person() {
+        this.age = 0;
+        setTimeout(() => {
+            // 回调里面的 `this` 变量就指向了期望的那个对象了
+            console.log("箭头函数:" + this.age); //0
+            // 以非方法的方式使用的箭头函数会捕获其所在（即定义的位置）上下文的this值， 作为自己的this值。
+        }, 100);
+        setTimeout(function () {
+            console.log("普通函数:" + this.age); //11 
+            //由于setInterval跟setTimeout调用的代码运行在与所在函数完全分离的执行环境上。
+            //这会导致在普通函数中这些代码中包含的 this 关键字会指向 window (或全局)对象。
+        }, 100);
+    }
+    var obj = {
+        age: 22,
+        methods: {
+            age: 33,
+            say: function () {
+                console.log(this.age) //33 指向调用say函数的对象methods，this.age == methods.age
+            },
+            say2: () => {
+                console.log(this.age) //11 箭头函数以方法形式被调用，this指向全局对象window
+            }
+        }
+    }
+    // 作为方法的箭头函数this指向全局window对象，而普通函数则指向调用它的对象
+    obj.methods.say(); //33  作为方法调用的普通函数则指向调用它的对象
+    obj.methods.say2(); //11 作为方法的箭头函数this指向全局window对象
+    var p = new Person();
+</script>
+
+</html>
