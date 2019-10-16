@@ -1,0 +1,101 @@
+Vue / keep-alive
+keep-alive是Vue提供的一个抽象组件，用来对组件进行缓存，从而节省性能，由于是一个抽象组件，所以在v页面渲染完毕后不会被渲染成一个DOM元素
+
+<keep-alive>
+    <loading></loading>
+</keep-laive>
+当组件在keep-alive内被切换时组件的activated、deactivated这两个生命周期钩子函数会被执行
+
+被包裹在keep-alive中的组件的状态将会被保留，例如我们将某个列表类组件内容滑动到第100条位置，那么我们在切换到一个组件后再次切换回到该组件，该组件的位置状态依旧会保持在第100条列表处
+
+
+vue/slot
+
+vue中的组件，可谓是相当重要的内容。slot的主要作用就是组件的组合，用来扩展组件。简单来说：
+
+<bigbig>
+ <smallsmall></smallsmall>
+</bigbig>
+这样将两个自定义的组件组合起来，父组件<bigbig>也许会有自己的模板，这样<smallsmall>在里面就很尴尬，它需要一个明确的定义如何显示。此时便需要使用slot。
+1.单个slot
+
+它的含义指的就是组件模板中包含一个slot。就上个例子来说，如果<bigbig>不包含<slot>，那么<bigbig>自己本身模板中的内容将会被抛弃，只显示<smallsmall>。如果包含slot，那么<smallsmall>将会插入<slot>的内容中并且替换掉它。<slot>标签中也可以携带内容，当没有内容插入时，将显示slot标签中的内容。举个例子：
+
+假定组件<bigbig>有如下模板：
+
+<div>
+<p>我是组件里自带的段落~</p>
+<slot>如果没有需要插入的内容，就显示我啦~</slot>
+</div>
+现在我们要渲染以下代码：
+
+<bigbig>
+  <p>我是需要渲染的内容~</p>
+</bigbig>
+将显示什么结果呢？答案是先显示“我是组件里自带的段落~”再显示“我是需要渲染的内容~”。因为我们已经将其插入slot中了，并替换掉了slot中的内容。如果我们没有需要插入的内容，则会显示slot原本中的内容“如果没有需要插入的内容，就显示我啦~”
+
+
+2.具名slot
+
+它的含义简单来说就是带有名字的slot。当插槽不止一个时，为了区分他们，则需要带上名字，用法和单个slot本质上是一样的。
+
+假定组件<bigbig>有如下模板：
+
+ 
+
+<div>
+<slot name=‘one’></slot>
+<slot></slot>
+<slot name=‘two’></slot>
+</div>
+ 
+
+接下来渲染：
+
+<bigbig>
+  <p slot='one'>111</p>
+  <p slot='two'>222</p>
+  <p>code</p>
+</bigbig>
+渲染结果为：111 code 222 。对应名称插入到对应的插槽。
+
+
+3作用域插槽
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="vue.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+             <!-- 在父级中，具有特殊特性 slot-scope 的 <template> 元素必须存在，表示它是作用域插槽的模板。slot-scope 的值将被用作一个临时变量名，此变量接收从子组件传递过来的 prop 对象： -->
+             <child>
+                <template slot-scope="props">
+                  <span>hello from parent</span><br>
+                  <span>{{ props.text }}</span>
+                </template>
+            </child>
+        </div>
+        <script type="text/javascript">
+            // 在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：
+            Vue.component('child',{
+               template:'<ul>' +
+                            '<slot text="hello from child"></slot>' +
+                         '</ul>',
+                data:function(){
+                  return {
+
+                  }
+                },
+            });
+            new Vue({
+                el:'#app',
+                data:{
+                    msg:'你好啊'
+                }
+            })
+
+        </script>
+    </body>
+</html>
