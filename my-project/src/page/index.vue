@@ -3,7 +3,7 @@
     <!-- {{data}}
     <test1></test1>
     <test2></test2> -->
-    <!-- <farther>
+    <farther>
     </farther>
     <div>-----------</div>
     <farther>
@@ -14,7 +14,7 @@
           </div>
         </template>
       </child>
-    </farther> -->
+    </farther>
     <child1></child1>
     <child2></child2>
     <button @click="tomap">地图</button>

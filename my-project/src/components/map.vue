@@ -29,7 +29,7 @@ export default {
       this.map = new AMap.Map("container", {
         center: [116.397428, 39.90923],
         resizeEnable: true,
-        zoom: 15
+        zoom: 15,
       });
     }
   }
