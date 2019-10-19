@@ -2,7 +2,7 @@
   <div @click="add">
     {{this.$store.state.footerStatus.changableNum}}
     {{isShow}}
-    <test3></test3>
+    <!-- <test3></test3> -->
   </div>
 </template>
 <script>

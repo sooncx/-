@@ -3,7 +3,7 @@
     {{this.$store.state.footerStatus.changableNum}}
     {{isShow}}
     {{arr}}
-    <test3></test3>
+    <!-- <test3></test3> -->
   </div>
 </template>
 <script>
