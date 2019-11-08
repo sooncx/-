@@ -1,0 +1,85 @@
+export function toTreeData(data, attributes) {
+  const dataCopy = JSON.parse(JSON.stringify(data));
+  //toTree
+  const map = new Map(dataCopy.map(item => [item[attributes.id], item]));
+  let treeData = [];
+  dataCopy.map(item => {
+    let parent = map.get(item[attributes.parentId]);
+    console.log(parent)
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item); // parent 引用 item
+    } else {
+      treeData.push(item);
+    }
+  });
+  return treeData;
+}
+
+
+
+ testData: [
+        {
+          organizationId: 111,
+          organizationName: "1",
+          parentId: 0,
+          total: 1,
+          userId: 0
+        },
+        {
+          organizationId: 222,
+          organizationName: "1-1",
+          parentId: 111,
+          total: 0,
+          userId: 0
+        },
+        {
+          organizationId: 333,
+          organizationName: "1-1-1",
+          parentId: 222,
+          total: 0,
+          userId: 0
+        },
+         {
+          organizationId: 444,
+          organizationName: "1-1-1-1",
+          parentId: 333,
+          total: 0,
+          userId: 0
+        }
+      ],
+
+
+ toTreeData(this.testData, {
+        id: "organizationId",
+        parentId: "parentId"
+      });
+
+      
+Map(4) {111 => {…}, 222 => {…}, 333 => {…}, 444 => {…}}
+
+item：
+{organizationId: 111, organizationName: "1", parentId: 0, total: 1, userId: 0}
+{organizationId: 222, organizationName: "1-1", parentId: 111, total: 0, userId: 0}
+{organizationId: 333, organizationName: "1-1-1", parentId: 222, total: 0, userId: 0}
+{organizationId: 444, organizationName: "1-1-1-1", parentId: 333, total: 0, userId: 0}
+
+
+item[attributes.parentId]就是item中parentId的值，分别是0,111,222,333
+map中key => value 对应的值是每个item的organizationId和item本身。
+即：
+Map(4) {
+        111 => {organizationId: 111, organizationName: "1", parentId: 0, total: 1, userId: 0}, 
+        222 => {organizationId: 222, organizationName: "1-1", parentId: 111, total: 0, userId: 0},
+        333 => {organizationId: 333, organizationName: "1-1-1", parentId: 222, total: 0, userId: 0},
+        444 => {organizationId: 444, organizationName: "1-1-1-1", parentId: 333, total: 0, userId: 0}
+        }
+
+如果一个item的parentId等于另一个item的organizationId，则第一个item是第二个item的子级
+let parent = map.get(item[attributes.parentId]);该语句获取map中key等于item中parentId的对应的map中的value
+即获取每个有父级的item的父级内容，再将每个有父级的item push进对应的父级的children中
+
+parent：
+undefined
+{organizationId: 111, organizationName: "1", parentId: 0, total: 1, userId: 0}
+{organizationId: 222, organizationName: "1-1", parentId: 111, total: 0, userId: 0}
+{organizationId: 333, organizationName: "1-1-1", parentId: 222, total: 0, userId: 0}

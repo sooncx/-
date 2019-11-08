@@ -9,10 +9,28 @@
 </head>
 
 <body>
-
+    <button>test</button>
 </body>
 
 </html>
 <script>
-    var obj = {}
+var btn = document.getElementsByTagName('button');
+function throttle(func, delay) {            
+    var timer = null;  
+    return function() {               
+        // var context = this;               
+        // var args = arguments;           
+        if (!timer) {                    
+            timer = setTimeout(function() {                        
+                func();    
+                //func.apply(context, args);                    
+                timer = null;                    
+            }, delay);            
+        }          
+    }        
+}   
+function handle() {            
+    console.log(Math.random());        
+}
+btn[0].addEventListener('click',throttle(handle, 1000))
 </script>
